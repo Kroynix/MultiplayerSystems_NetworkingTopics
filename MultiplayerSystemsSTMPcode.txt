@@ -1,0 +1,60 @@
+
+
+Git Respository:
+https://github.com/Kroynix/MultiplayerSystems_NetworkingTopics
+
+using UnityEngine;
+using UnityEngine.UI;
+using System;
+using System.Net;
+using System.Net.Mail;
+using System.Net.Security;
+using System.Net.Mime;
+
+public class EmailSender : MonoBehaviour
+{
+    string file = "MultiplayerSystemsSTMPcode.txt";
+
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.S))
+            SendEmail();
+    }
+
+    public void SendEmail()
+    {
+        SmtpClient SmtpServer = new SmtpClient() {
+        Host = "smtp.gmail.com",
+        Timeout = 10000,
+        DeliveryMethod = SmtpDeliveryMethod.Network,
+        UseDefaultCredentials = false,
+        Port = 587,
+        Credentials = new System.Net.NetworkCredential("YOUREMAIL", "YOURPASSWORD") as ICredentialsByHost,
+        EnableSsl = true,
+        };
+
+        Attachment data = new Attachment(file, MediaTypeNames.Application.Octet);
+
+        MailMessage mail = new MailMessage(){
+        From = new MailAddress("YOUREMAIL"),
+        Subject = "101268067 - Nathan Nguyen STMP email",
+        Body = "Hey! Sending you an email through STMP code! Below is the code I used",
+        DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure,
+        };
+
+        mail.Attachments.Add(data);
+        mail.To.Add(new MailAddress("RECEPIENT"));
+
+
+        try{
+        Debug.Log("Email Successfuly Sent!");
+        SmtpServer.Send(mail);
+
+        }
+        catch(Exception ex)
+        {
+            Debug.LogException(ex, this);
+        }
+    }
+
+}
